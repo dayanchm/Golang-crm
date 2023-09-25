@@ -5,6 +5,14 @@ go 1.20
 require gorm.io/gorm v1.25.4
 
 require (
+	github.com/fatih/color v1.9.0 // indirect
+	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/githubnemo/CompileDaemon v1.4.0 // indirect
+	github.com/mattn/go-colorable v0.1.4 // indirect
+	github.com/radovskyb/watcher v1.0.7 // indirect
+)
+
+require (
 	github.com/bytedance/sonic v1.10.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
