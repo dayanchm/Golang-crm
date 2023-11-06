@@ -1,6 +1,7 @@
 package model
 
 import (
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -19,14 +20,18 @@ type Role struct {
 }
 
 func CreateUser(db *gorm.DB, username, password, email string, roleID uint) (*User, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
 	newUser := &User{
 		Username: username,
-		Password: password,
+		Password: string(hashedPassword),
 		Email:    email,
 		RoleID:   roleID,
 	}
 	if err := db.Create(newUser).Error; err != nil {
-		return nil, err // Hata durumunda hatayı döndür
+		return nil, err
 	}
 	return newUser, nil
 }
