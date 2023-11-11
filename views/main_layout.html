@@ -1,18 +1,23 @@
-{{define "main_layout"}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
 </head>
 <body>
-    {{template "layouts/header.html" .}}
+    <!-- Header içeriği buraya gelecek -->
+    {{template "layouts/header" .}}
 
-    {{block "content" .}}{{.content}}{{end}}
+    <!-- Sidebar içeriği buraya gelecek -->
 
+    <main>
+        <!-- Ana içerik buraya gelecek -->
+        {{block "content" .}}{{end}}
+    </main>
 
-    {{template "layouts/footer.html" .}}
+    <!-- Footer içeriği buraya gelecek -->
+    {{template "layouts/footer" .}}
 </body>
 </html>
-{{end}}

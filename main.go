@@ -5,16 +5,11 @@ import (
 	"crm/database"
 	"crm/model"
 	"crm/routes"
-	"embed"
-	"html/template"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
-
-//go:embed views
-var views embed.FS
 
 func main() {
 	gin.SetMode(gin.ReleaseMode)
@@ -34,21 +29,11 @@ func main() {
 
 	userController := controller.NewUserControllerWithDB(sqlDB, gormDB)
 
-	r := gin.Default()
+	router := gin.Default()
 
-	// embed.FS kullanarak statik dosyaları yükleyin
-	html, err := template.New("").ParseFS(views, "views/**/*.html")
-	if err != nil {
-		panic(err)
-	}
+	routes.SetupRoutes(router, userController)
 
-	r.SetHTMLTemplate(html) // Gin'e html/template kullanacağını bildirin
-
-	r.Static("/assets", "./assets")
-
-	routes.SetupRoutes(r, userController)
-
-	err = r.Run(":3000")
+	err = router.Run(":3002")
 	if err != nil {
 		panic(err)
 	}
