@@ -1,0 +1,35 @@
+{{define "content"}}
+<h1>
+   Optik Form Düzenle
+    <a href="/admin/optik" class="btn btn-outline-primary float-right"><i class="fa fa-arrow-left"></i> Geri</a>
+</h1>
+<hr>
+<form action="/optik/update/{{ .Optik.ID }}" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Optik Form Başlığı </label>
+        <input type="text" name="optik-title" class="form-control" value="{{ .Optik.OptikTitle }}">
+    </div>
+    <div class="form-group">
+        <label>Optik Form Açıklaması </label>
+        <textarea name="optik-desc" cols="30" row="2" class="form-control">{{.Optik.OptikDescription}}</textarea>
+    </div>
+    <div class="form-group">
+        <img width="100px" src="/admin/{{ .Optik.OptikPicture_url }}" class="my-2" id="current-picture">
+        <label>Optik Form Fotoğraf</label>
+        <input type="file" name="optik-picture" class="form-control-file" id="file-upload">
+        <input type="hidden" name="optik_selected" id="is_selected" value="0">
+    </div>
+    <div class="form-group">
+        <label>Optik Form İçeriği </label>
+        <textarea name="optik-content" id="summernote" cols="30" row="2" class="form-control">{{.Optik.OptikContent}}</textarea>
+    </div>
+    <button class="btn btn-outline-danger my-3" type="submit">Yenile ve Kaydet</button>
+</form>
+
+<script>
+    document.getElementById("file-upload").addEventListener("change", function (){
+        document.getElementById("optik_selected").setAttribute("value", "1")
+        document.getElementById("current-picture").style.display="none"
+    })
+</script>
+{{end}}

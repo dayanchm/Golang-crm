@@ -1,40 +1,19 @@
 package main
 
 import (
-	"crm/controller"
-	"crm/database"
-	"crm/model"
-	"crm/routes"
-
-	"github.com/gin-gonic/gin"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	admin_models "blog/admin/models"
+	"blog/config"
+	"net/http"
 )
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
-
-	sqlDB, err := database.OpenDB()
-	if err != nil {
-		panic(err)
-	}
-	defer sqlDB.Close()
-
-	dsn := "bursaweb_ajans:Genetik1997.*/@tcp(84.54.13.3:3306)/bursaweb_crm?charset=utf8mb4&parseTime=True&loc=Local"
-	gormDB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	err = gormDB.AutoMigrate(&model.User{})
-	if err != nil {
-		panic(err)
-	}
-
-	userController := controller.NewUserControllerWithDB(sqlDB, gormDB)
-
-	router := gin.Default()
-
-	routes.SetupRoutes(router, userController)
-
-	err = router.Run(":3002")
-	if err != nil {
-		panic(err)
-	}
+	admin_models.Post{}.Migrate()
+	admin_models.User{}.Migrate()
+	admin_models.Category{}.Migrate()
+	admin_models.Optik{}.Migrate()
+	admin_models.Optikokuyucu{}.Migrate()
+	admin_models.Contact{}.Migrate()
+	admin_models.Dosya{}.Migrate()
+	admin_models.Slider{}.Migrate()
+	http.ListenAndServe(":8080", config.Routes())
 }

@@ -1,0 +1,26 @@
+{{define "content"}}
+<h1>
+    Yeni Optik Form Gir
+    <a href="/admin/optik" class="btn btn-outline-primary float-right"><i class="fa fa-arrow-left"></i> Geri</a>
+</h1>
+<hr>
+<form action="/admin/optik" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Optik Form Başlık </label>
+        <input type="text" name="optik-title" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Optik Form Açıklaması </label>
+        <textarea name="optik-desc" cols="30" row="2" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Optik Form Fotoğrafı </label>
+        <input type="file" name="optik-picture" class="form-control-file">
+    </div>
+    <div class="form-group">
+        <label>Optik Form İçeriği </label>
+        <textarea name="optik-content" id="summernote" cols="30" row="2" class="form-control"></textarea>
+    </div>
+    <button class="btn btn-outline-danger my-3" type="submit">Kaydet</button>
+</form>
+{{end}}

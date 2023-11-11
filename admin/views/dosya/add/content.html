@@ -1,0 +1,21 @@
+{{define "content"}}
+<form action="/admin/dosyacontentupload" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Dosya Adı </label>
+        <input type="text" name="dosya-title" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Dosya Açıklaması </label>
+        <textarea name="dosya-desc" cols="30" row="2" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Dosya Yükle</label>
+        <input type="file" name="myFile" class="form-control-file">
+    </div>
+    <div class="form-group">
+        <label>Dosya İçeriği Detaylı </label>
+        <textarea name="dosya-content" id="summernote" cols="30" row="2" class="form-control"></textarea>
+    </div>
+    <button class="btn btn-outline-danger my-3" type="submit">Kaydet</button>
+</form>
+{{end}}

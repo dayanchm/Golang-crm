@@ -1,0 +1,35 @@
+{{ define "content" }}
+<!-- Page Header-->
+
+<section class="container-fluid">
+    <img src="/{{ .Post.Picture_url}}" class="picturedetail">
+</section>
+<header class="masthead">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-heading">
+          <h1 class="text-center mt-5 mb-3">{{ .Post.Title }}</h1>
+          <h2 class="subheading text-center mt-2 text-muted">{{ .Post.Description }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Post Content-->
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div id="blog-content"></div>
+      </div>
+    </div>
+  </div>
+</article>
+<script>
+  document.getElementById("blog-content").innerHTML = "{{ .Post.Content }}"
+</script>
+{{ end }}
+

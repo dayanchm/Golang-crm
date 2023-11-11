@@ -1,0 +1,26 @@
+{{define "content"}}
+<h1>
+    Kullanıcı ekle
+    <a href="/admin/registers" class="btn btn-outline-primary float-right"><i class="fa fa-arrow-left"></i> Geri</a>
+</h1>
+<hr>
+<form action="/admin/registersadd" method="post">
+    <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <input type="text" name="email" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="text" name="password" class="form-control">
+    </div>
+    <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="text" name="confirm_password" class="form-control">
+    </div>
+    <button class="btn btn-outline-danger my-3" type="submit">Kaydet</button>
+</form>
+{{end}}

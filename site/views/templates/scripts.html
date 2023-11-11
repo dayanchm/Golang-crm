@@ -1,0 +1,33 @@
+{{ define "scripts" }}
+<!-- Bootstrap core JS-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/10.2.0/swiper-bundle.min.js"></script>
+<script>
+  var swiper = new Swiper(".mySwiper", {
+    slidesPerView: 1,
+    loop: true,
+    autoplay: {
+      delay: 4000,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+    },
+  });
+  var swiper = new Swiper(".myCarousel", {
+    slidesPerView: 3,
+    loop: true,
+    autoplay: {
+      delay: 4000,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+    },
+  });
+</script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/tiny-slider.js"></script>
+<script src="/assets/js/custom.js"></script>
+<script src="/assets/js/script.js"></script>
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/bootstrap.bunlde.min.js"></script>
+{{ end }}

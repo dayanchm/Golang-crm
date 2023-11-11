@@ -1,0 +1,58 @@
+{{define "content"}}
+<h1 class=" text-white">
+  Bloglar
+    <a href="/admin/content-add" class="btn btn-outline-primary float-right"><i class="fa fa-plus"></i> Blog ekle</a>
+</h1>
+<hr>
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Blog</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Blog Fotoğraf</th>
+                            <th scope="col">Blog Başlık</th>
+                            <th scope="col">Blog Kategori</th>
+                            <th scope="col">Eklenen Tarihi</th>
+                            <th scope="col">Işlemler</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Blog Fotoğraf</th>
+                            <th scope="col">Blog Başlık</th>
+                            <th scope="col">Blog Kategori</th>
+                            <th scope="col">Eklenen Tarihi</th>
+                            <th scope="col">Işlemler</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {{range $index ,$value := .Posts}}
+                        <tr>
+                            <th scope="row">{{ $value.ID }}</th>
+                            <td ><img width="30px" src="/{{$value.Picture_url}}" alt=""></td>
+                            <td>{{$value.Title}}</td>
+                            <td>{{ getCategory $value.CategoryID}}</td>
+                            <td>{{$value.CreatedAt}}</td>
+                            <td>
+                                <a href="/admin/edit/{{ $value.ID }}" class="btn btn-outline-warning"> <i class="fa fa-pen"></i></a>
+                                <a href="/admin/delete/{{ $value.ID }}" class="btn btn-outline-danger"> <i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {{ end }}
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{end}}

@@ -1,0 +1,40 @@
+{{define "content"}}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">İletişim </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Adı</th>
+                            <th>Soyadı</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th>Mesaj</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range $index, $value := .Contacts}}
+                        <tr>
+                            <td>{{ $value.Adi }}</td>
+                            <td>{{ $value.Soyadi }}</td>
+                            <td>{{ $value.Email }}</td>
+                            <td>{{ $value.Telefon }}</td>
+                            <td>{{ $value.Mesaj }}</td>
+                            <td> <a href="/contact/delete/{{ $value.ID }}" class="btn btn-outline-danger"> <i class="fa fa-trash"></i></a></td>
+                        </tr>
+                     {{ end }}
+                  
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{{end}}

@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  db:
+    image: mysql
+    command: [ "--max_connections=100000" ]
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Genetik1997.*/
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+
+  blog:
+    build: .
+    ports:
+      - 80:8080
+    volumes:
+      - blogdata:/uploads
+      - blogdata:/optikuploads
+
+volumes:
+  mysqldata:
+  blogdata:

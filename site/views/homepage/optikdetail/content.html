@@ -1,0 +1,60 @@
+{{ define "content" }}
+<div class="container">
+  <div class="row">
+  </div>
+</div>
+<div class="container">
+  <p class="text-muted">
+      "Bugün bir optik form sipariş edin" 
+  </p>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12 mb-5 d-flex justify-content-end">
+      <div class="d-flex justify-content-end">
+        <a href="#img1">
+          <img src="/admin/{{ .Optik.OptikPicture_url}}" class="w-75">
+        </a>
+        
+        <a href="#" class="lightbox" id="img1">
+          <span style="background-image: url('/admin/{{.Optik.OptikPicture_url}}')"></span>
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12">
+      <div class="flex-column optikgalssrom">
+          <h2>
+            {{ .Optik.OptikTitle}}
+          </h2>
+            <p>
+              Bu  Optik Form Aşağıdaki Alanlardan oluşmaktadır;
+            </p>
+            <ul>
+              <li>
+                <p id="blog-content"></p>
+              </li>
+            </ul>
+            <p><strong>NOT:</strong> İsteğe bağlı Kurumunuzun Logosu basılmaktadır.</p>
+            <a href="/admin/{{.Optik.OptikPicture_url}}" download class="buttonDownload">
+              Optik İndir 
+            </a>
+      </div>
+      <div class="flex-column optikgalssrom">
+        <h2 class="pb-3">
+         İletişim çözümlerimiz
+        </h2>
+          <div class="olcmedisplay">
+            <a href="/iletisim" class="btn btn-primary">İletişim</a>
+            <a href="https://api.whatsapp.com/send?phone=++90(539)4349898&amp;text=Merhaba optik sipariş etmek istiyorum?" class="text-decoration-none text-dark" onclick=""><i class="fa-brands fa-whatsapp fa-2xl"></i> Hızlı Whatsapp iletişim çözümlerimiz için tıklayınız.</a>
+          </div>
+           </div>
+    </div>
+  </div>
+  
+  </div>
+
+  <script>
+    document.getElementById("blog-content").innerHTML = " {{ .Optik.OptikContent}}"
+  </script>
+  {{ end }}
+
