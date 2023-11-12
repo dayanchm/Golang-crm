@@ -21,6 +21,13 @@ func (dashboard Dashboard) Dashboard(w http.ResponseWriter, r *http.Request, par
 	if !helpers.CheckUser(w, r) {
 		return
 	}
+
+	dovizKurlari, err := helpers.GetDovizKurlari()
+	if err != nil {
+		http.Error(w, "Döviz kurları alınamadı", http.StatusInternalServerError)
+		return
+	}
+
 	view, err := template.New("index").Funcs(template.FuncMap{
 		"getCategory": func(categoryID int) string {
 			return models.Category{}.Get(categoryID).Title
@@ -30,9 +37,12 @@ func (dashboard Dashboard) Dashboard(w http.ResponseWriter, r *http.Request, par
 		fmt.Println(err)
 		return
 	}
+
 	data := make(map[string]interface{})
 	data["Posts"] = models.Post{}.GetAll()
 	data["Alert"] = helpers.GetAlert(w, r)
+	data["DovizKurlari"] = dovizKurlari.Currencies
+
 	view.ExecuteTemplate(w, "index", data)
 }
 

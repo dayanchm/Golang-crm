@@ -2,8 +2,8 @@ package config
 
 import (
 	admin "blog/admin/controllers"
-	site "blog/site/controllers"
 	"net/http"
+
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -11,7 +11,6 @@ func Routes() *httprouter.Router {
 	r := httprouter.New()
 	// Dashboard
 	r.GET("/dashboard", admin.Dashboard{}.Dashboard)
-	//Add-BLOG
 	r.GET("/admin/blog", admin.Dashboard{}.Index)
 	r.GET("/admin/content-add", admin.Dashboard{}.NewItem)
 	r.POST("/admin/blog", admin.Dashboard{}.Add)
@@ -70,22 +69,6 @@ func Routes() *httprouter.Router {
 	r.GET("/admin/login", admin.Userops{}.Index)
 	r.POST("/admin/do_login", admin.Userops{}.Login)
 	r.GET("/admin/logout", admin.Userops{}.Logout)
-
-	//SITE
-	//Homepage
-	r.GET("/", site.Homepage{}.Index)
-	r.GET("/about", site.Homepage{}.About)
-	r.GET("/optik", site.Homepage{}.Optik)
-	r.GET("/optikformdetail/:optik_slug", site.Homepage{}.Optikdetail)
-	r.GET("/optikokuyucu", site.Homepage{}.Optikokuyucu)
-	r.GET("/optikokuyucudetail/:optik_slug", site.Homepage{}.Optikokuyucudetail)
-	r.GET("/contact", site.Homepage{}.İletisim)
-	r.POST("/iletisim/contact", site.Homepage{}.Post)
-	r.GET("/blog", site.Homepage{}.Blog)
-	r.GET("/blog/:slug", site.Homepage{}.Detail)
-	r.GET("/dosyalar", site.Homepage{}.Dosyalar)
-	r.GET("/dosyalar/:dosya_slug", site.Homepage{}.Dosyalarslug)
-	r.GET("/thanks", site.Homepage{}.Thanks)
 
 	//Serve File
 	r.ServeFiles("/admin/assets/*filepath", http.Dir("admin/assets"))

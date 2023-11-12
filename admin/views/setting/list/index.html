@@ -1,0 +1,26 @@
+{{ define "index" }}
+<!DOCTYPE html>
+<html lang="en">
+
+{{ template "head" }}
+
+<body>
+    <div class="page-wrapper compact-wrapper" id="pageWrapper">
+      <div class="page-body-wrapper sidebar-icon">
+        
+    {{ template "sidebar"}}
+    {{ template "navbar" }}
+
+    {{template "content" . }}
+
+    {{template "footer"}}
+
+</div>
+</div>
+    {{template "scripts" }}
+
+
+</body>
+
+</html>
+{{end}}
