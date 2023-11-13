@@ -12,8 +12,7 @@ func main() {
 	admin_models.Category{}.Migrate()
 	admin_models.Optik{}.Migrate()
 	admin_models.Optikokuyucu{}.Migrate()
-	admin_models.Contact{}.Migrate()
 	admin_models.Dosya{}.Migrate()
-	admin_models.Slider{}.Migrate()
+	admin_models.General_Setting{}.Migrate()
 	http.ListenAndServe(":8080", config.Routes())
 }

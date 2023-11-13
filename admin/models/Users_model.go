@@ -10,6 +10,7 @@ import (
 type User struct {
 	gorm.Model
 	Username, Password, Email, ConfirmPassword string
+	Roles                                      []Role `gorm:"many2many:user_roles"`
 	db                                         gorm.DB
 }
 

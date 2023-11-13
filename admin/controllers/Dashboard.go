@@ -21,25 +21,19 @@ func (dashboard Dashboard) Dashboard(w http.ResponseWriter, r *http.Request, par
 	if !helpers.CheckUser(w, r) {
 		return
 	}
-
 	dovizKurlari, err := helpers.GetDovizKurlari()
 	if err != nil {
 		http.Error(w, "Döviz kurları alınamadı", http.StatusInternalServerError)
 		return
 	}
 
-	view, err := template.New("index").Funcs(template.FuncMap{
-		"getCategory": func(categoryID int) string {
-			return models.Category{}.Get(categoryID).Title
-		},
-	}).ParseFiles(helpers.Include("admin/list")...)
+	view, err := template.New("index").Funcs(template.FuncMap{}).ParseFiles(helpers.Include("admin/list")...)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	data := make(map[string]interface{})
-	data["Posts"] = models.Post{}.GetAll()
 	data["Alert"] = helpers.GetAlert(w, r)
 	data["DovizKurlari"] = dovizKurlari.Currencies
 
@@ -157,7 +151,6 @@ func (dashboard Dashboard) Update(w http.ResponseWriter, r *http.Request, params
 	var picture_url string
 
 	if is_selected == "1" {
-		// upload-picture
 		r.ParseMultipartForm(10 << 20)
 		file, header, err := r.FormFile("blog-picture")
 		if err != nil {

@@ -7,12 +7,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type General struct {
+type General_Setting struct {
 	gorm.Model
-	SiteTitle, FooterTitle, Logo, Favicon string
+	SiteTitle, FooterTitle, Logo, DarkLogo, Favicon string
 }
 
-func (general General) Migrate() {
+func (general General_Setting) Migrate() {
 	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)
@@ -21,7 +21,7 @@ func (general General) Migrate() {
 	db.AutoMigrate(&general)
 }
 
-func (general General) Add() {
+func (general General_Setting) Add() {
 	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)
@@ -30,7 +30,7 @@ func (general General) Add() {
 	db.Create(&general)
 }
 
-func (general General) Get(where ...interface{}) General {
+func (general General_Setting) Get(where ...interface{}) General_Setting {
 	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)
@@ -40,7 +40,7 @@ func (general General) Get(where ...interface{}) General {
 	return general
 }
 
-func (general General) Update(column string, value interface{}) {
+func (general General_Setting) Update(column string, value interface{}) {
 	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)
@@ -49,7 +49,7 @@ func (general General) Update(column string, value interface{}) {
 	db.Model(&general).Update(column, value)
 }
 
-func (general General) Delete() {
+func (general General_Setting) Delete() {
 	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)

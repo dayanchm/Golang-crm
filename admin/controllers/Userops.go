@@ -30,10 +30,10 @@ func (userops Userops) Login(w http.ResponseWriter, r *http.Request, params http
 	user := models.User{}.Get("username = ? AND password = ?", username, password)
 	if user.Username == username && user.Password == password {
 		helpers.SetUser(w, r, username, password)
-		helpers.SetAlert(w, r, "Hoşgeldiniz")
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+		helpers.SetAlert(w, r, "Welcome")
+		http.Redirect(w, r, "/admin", http.StatusSeeOther)
 	} else {
-		helpers.SetAlert(w, r, "Yanlış Kullanıcı Adı veya Şifre")
+		helpers.SetAlert(w, r, "Wrong Username and Password")
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 	}
 }
@@ -76,6 +76,6 @@ func (userops Userops) Login(w http.ResponseWriter, r *http.Request, params http
 
 func (userops Userops) Logout(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	helpers.RemoveUser(w, r)
-	helpers.SetAlert(w, r, "Hoşçakalın")
+	helpers.SetAlert(w, r, "Good bye, see you soon")
 	http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 }
