@@ -60,7 +60,7 @@ func (general General) Add(w http.ResponseWriter, r *http.Request, params httpro
 		defer darkLogoFile.Close()
 		defer faviconFile.Close()
 
-		uploadsDir := "/uploads/general/"
+		uploadsDir := "uploads/general"
 		os.MkdirAll(uploadsDir, os.ModePerm)
 
 		logoPath := filepath.Join(uploadsDir, logoHandler.Filename)
@@ -96,7 +96,6 @@ func (general General) Add(w http.ResponseWriter, r *http.Request, params httpro
 }
 
 func saveFile(filePath string, file multipart.File) error {
-	// Dosya dizinini kontrol et ve oluştur
 	dir := filepath.Dir(filePath)
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
@@ -104,18 +103,18 @@ func saveFile(filePath string, file multipart.File) error {
 		}
 	}
 
-	// Dosyayı oluştur
 	out, err := os.Create(filePath)
 	if err != nil {
 		return fmt.Errorf("Error creating file: %v", err)
 	}
 	defer out.Close()
 
-	// Dosyayı kopyala
+	// Copy the file
 	_, err = io.Copy(out, file)
 	if err != nil {
 		return fmt.Errorf("Error copying file: %v", err)
 	}
 
+	fmt.Printf("File %s uploaded successfully\n", filePath)
 	return nil
 }

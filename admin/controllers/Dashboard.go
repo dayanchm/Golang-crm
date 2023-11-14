@@ -27,15 +27,22 @@ func (dashboard Dashboard) Dashboard(w http.ResponseWriter, r *http.Request, par
 		return
 	}
 
+	News, err := helpers.GetNews()
+	if err != nil {
+		http.Error(w, "Not get News", http.StatusInternalServerError)
+		return
+	}
+
 	view, err := template.New("index").Funcs(template.FuncMap{}).ParseFiles(helpers.Include("admin/list")...)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-
+	helpers.Opera(w, r)
 	data := make(map[string]interface{})
 	data["Alert"] = helpers.GetAlert(w, r)
 	data["DovizKurlari"] = dovizKurlari.Currencies
+	data["Newss"] = News.Articles
 
 	view.ExecuteTemplate(w, "index", data)
 }

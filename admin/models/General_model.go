@@ -57,3 +57,14 @@ func (general General_Setting) Delete() {
 	}
 	db.Delete(&general, general.ID)
 }
+
+func GetLatestGeneralSetting() (General_Setting, error) {
+	var setting General_Setting
+	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+		return setting, err
+	}
+	db.Order("created_at desc").First(&setting)
+	return setting, nil
+}

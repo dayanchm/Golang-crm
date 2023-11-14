@@ -14,7 +14,7 @@ func Routes() *httprouter.Router {
 
 	// General
 	r.GET("/admin/setting", admin.General{}.Index)
-	r.POST("/admin/setting/add", admin.General{}.Add)
+	r.POST("/admin/setting/", admin.General{}.Add)
 
 	// Userops
 	r.GET("/admin/login", admin.Userops{}.Index)
