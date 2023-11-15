@@ -38,7 +38,6 @@ func (dashboard Dashboard) Dashboard(w http.ResponseWriter, r *http.Request, par
 		fmt.Println(err)
 		return
 	}
-	helpers.Opera(w, r)
 	data := make(map[string]interface{})
 	data["Alert"] = helpers.GetAlert(w, r)
 	data["DovizKurlari"] = dovizKurlari.Currencies
