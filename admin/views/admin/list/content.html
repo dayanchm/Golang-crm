@@ -345,12 +345,13 @@
               <div class="card">
                 <div class="card-header pb-0">
                   <h5>Daily News</h5>
+                  {{ .SiteTitle }}
                 </div>
                 <div class="my-gallery card-body row gallery-with-description">
                     {{range .Newss}}
                   <figure class="col-xl-3 col-sm-12" itemprop="associatedMedia">
                     <a href="{{.URL}}" itemprop="contentUrl" target="_blank">
-                      <img src={{.URLToImage}} itemprop="thumbnail" class="w-100" alt={{.Title}}>
+                       <img src={{.URLToImage}} itemprop="thumbnail" class="w-100" alt={{.Title}}>
                       <div class="caption">
                         <h4>{{.Title}}</h4>
                         <p>{{.Description}}</p>

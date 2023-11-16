@@ -20,14 +20,33 @@ func (general General_Setting) Migrate() {
 	}
 	db.AutoMigrate(&general)
 }
-
-func (general General_Setting) Add() {
+func (general *General_Setting) GetLatestGeneralSetting() (General_Setting, error) {
 	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
 	if err != nil {
-		fmt.Println(err)
-		return
+		return *general, fmt.Errorf("Veritabanına bağlanırken bir hata oluştu: %v", err)
 	}
-	db.Create(&general)
+
+	var setting General_Setting
+	result := db.Order("created_at desc").First(&setting)
+
+	if result.Error != nil {
+		return *general, fmt.Errorf("Veritabanından veri çekme işlemi başarısız: %v", result.Error)
+	}
+
+	return setting, nil
+}
+func (general General_Setting) Add() error {
+	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
+	if err != nil {
+		return fmt.Errorf("Veritabanına bağlanırken bir hata oluştu: %v", err)
+	}
+
+	result := db.Create(&general)
+	if result.Error != nil {
+		return fmt.Errorf("Veritabanına ekleme işlemi başarısız: %v", result.Error)
+	}
+
+	return nil
 }
 
 func (general General_Setting) Get(where ...interface{}) General_Setting {
@@ -38,6 +57,17 @@ func (general General_Setting) Get(where ...interface{}) General_Setting {
 	}
 	db.First(&general, where...)
 	return general
+}
+
+func (general General_Setting) GetAll(where ...interface{}) []General_Setting {
+	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	var generals []General_Setting
+	db.Find(&generals, where...)
+	return generals
 }
 
 func (general General_Setting) Update(column string, value interface{}) {

@@ -118,3 +118,28 @@ func saveFile(filePath string, file multipart.File) error {
 	fmt.Printf("File %s uploaded successfully\n", filePath)
 	return nil
 }
+
+func (general General) MyPage(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	latestSetting, err := models.GetLatestGeneralSetting()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	tmpl, err := template.New("mypage").ParseFiles(`/admin/list`)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	data := map[string]interface{}{
+		"SiteTitle":   latestSetting.SiteTitle,
+		"FooterTitle": latestSetting.FooterTitle,
+	}
+
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
