@@ -38,6 +38,21 @@ func (userops Userops) Login(w http.ResponseWriter, r *http.Request, params http
 	}
 }
 
+func (userops Userops) Register(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	if !helpers.CheckUser(w, r) {
+		return
+	}
+	view, err := template.New("index").Funcs(template.FuncMap{}).ParseFiles(helpers.Include("/register/list")...)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	data := make(map[string]interface{})
+	data["User"] = models.User{}.GetAll()
+	data["Alert"] = helpers.GetAlert(w, r)
+	view.ExecuteTemplate(w, "index", data)
+}
+
 /* func (userops Userops) Register(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")

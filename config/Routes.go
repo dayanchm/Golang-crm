@@ -16,6 +16,9 @@ func Routes() *httprouter.Router {
 	r.GET("/admin/setting", admin.General{}.Index)
 	r.POST("/admin/setting/", admin.General{}.Add)
 
+	// Register
+	r.GET("/admin/users_register", admin.Userops{}.Register)
+
 	// Userops
 	r.GET("/admin/login", admin.Userops{}.Index)
 	r.POST("/admin/do_login", admin.Userops{}.Login)

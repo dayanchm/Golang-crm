@@ -125,18 +125,27 @@ func (general General) MyPage(w http.ResponseWriter, r *http.Request, params htt
 		fmt.Println(err)
 		return
 	}
-
-	tmpl, err := template.New("mypage").ParseFiles(`/admin/list`)
+	tmpl, err := template.New("mypage").Parse(`
+				<!DOCTYPE html>
+				<html>
+				<head>
+					<title>{{ .SiteTitle }}</title>
+				</head>
+				<body>
+					<h1>{{ .SiteTitle }}</h1>
+					<p>{{ .FooterTitle }}</p>
+					<!-- Diğer verileri buraya ekleyin -->
+				</body>
+				</html>
+`)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-
 	data := map[string]interface{}{
 		"SiteTitle":   latestSetting.SiteTitle,
 		"FooterTitle": latestSetting.FooterTitle,
 	}
-
 	err = tmpl.Execute(w, data)
 	if err != nil {
 		fmt.Println(err)

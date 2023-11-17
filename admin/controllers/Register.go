@@ -13,21 +13,6 @@ import (
 type User struct {
 }
 
-func (user User) Index(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	if !helpers.CheckUser(w, r) {
-		return
-	}
-	view, err := template.New("index").Funcs(template.FuncMap{}).ParseFiles(helpers.Include("/register/list")...)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	data := make(map[string]interface{})
-	data["User"] = models.User{}.GetAll()
-	data["Alert"] = helpers.GetAlert(w, r)
-	view.ExecuteTemplate(w, "index", data)
-}
-
 func (user User) NewItem(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	if !helpers.CheckUser(w, r) {
 		return
