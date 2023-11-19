@@ -4,10 +4,11 @@ import (
 	"blog/admin/helpers"
 	"blog/admin/models"
 	"fmt"
-	"github.com/gosimple/slug"
-	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"net/http"
+
+	"github.com/gosimple/slug"
+	"github.com/julienschmidt/httprouter"
 )
 
 type Categories struct{}

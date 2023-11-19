@@ -18,6 +18,8 @@ func Routes() *httprouter.Router {
 
 	// Register
 	r.GET("/admin/users_register", admin.Userops{}.Register)
+	r.POST("/admin/register_list", admin.Userops{}.RegisterAdd)
+	r.GET("/admin/register_list", admin.Userops{}.RegisterList)
 
 	// Userops
 	r.GET("/admin/login", admin.Userops{}.Index)

@@ -9,6 +9,8 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type Userops struct{}
@@ -42,52 +44,76 @@ func (userops Userops) Register(w http.ResponseWriter, r *http.Request, params h
 	if !helpers.CheckUser(w, r) {
 		return
 	}
+	view, err := template.New("index").Funcs(template.FuncMap{}).ParseFiles(helpers.Include("/register/add")...)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	data := make(map[string]interface{})
+	data["User"] = models.User{}.Get()
+	data["Alert"] = helpers.GetAlert(w, r)
+	view.ExecuteTemplate(w, "index", data)
+}
+
+func (userops Userops) RegisterList(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	if !helpers.CheckUser(w, r) {
+		return
+	}
 	view, err := template.New("index").Funcs(template.FuncMap{}).ParseFiles(helpers.Include("/register/list")...)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	data := make(map[string]interface{})
-	data["User"] = models.User{}.GetAll()
+	data["User"] = models.User{}.Get()
 	data["Alert"] = helpers.GetAlert(w, r)
 	view.ExecuteTemplate(w, "index", data)
 }
 
-/* func (userops Userops) Register(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (userops Userops) RegisterAdd(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	if !helpers.CheckUser(w, r) {
+		return
+	}
+	// Sayfa üzerindeki formdan rol adını al
+	roleName := r.FormValue("role")
+
+	// Diğer form verilerini al
+	name := r.FormValue("name")
+	surname := r.FormValue("surname")
 	username := r.FormValue("username")
-	password := r.FormValue("password")
-	confirmPassword := r.FormValue("confirm_password")
 	email := r.FormValue("email")
-	existingUser := models.User{}.Get("username = ? OR email = ?", username, email)
-	if existingUser.Username == username {
-		helpers.SetAlert(w, r, "Bu kullanıcı adı zaten alınmış")
-		http.Redirect(w, r, "/admin/register", http.StatusSeeOther)
-		return
-	} else if existingUser.Email == email {
-		helpers.SetAlert(w, r, "Bu e-posta zaten kullanılıyor")
-		http.Redirect(w, r, "/admin/register", http.StatusSeeOther)
-		return
-	}
-	if password != confirmPassword {
-		helpers.SetAlert(w, r, "Şifreler eşleşmiyor")
-		http.Redirect(w, r, "/admin/register", http.StatusSeeOther)
-		return
-	}
+	password := r.FormValue("password")
+	contact := r.FormValue("contact")
+
 	hashedPassword := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
-	newUser := models.User{
+
+	// Yeni kullanıcı nesnesini oluştur
+	userModel := models.User{
+		Name:     name,
+		Surname:  surname,
 		Username: username,
-		Password: hashedPassword,
 		Email:    email,
+		Password: hashedPassword,
+		Contact:  contact,
 	}
-	err := newUser.Create()
+
+	// Kullanıcının seçtiği rol adını kullanarak bir rol oluştur
+	var newRole models.Role
+	newRole.Name = roleName
+
+	// Gorm DB bağlantısını al
+	db, err := gorm.Open(mysql.Open(models.Dns), &gorm.Config{})
 	if err != nil {
-		helpers.SetAlert(w, r, "Kayıt sırasında bir hata oluştu. Lütfen daha sonra tekrar deneyin.")
-		http.Redirect(w, r, "/admin/register", http.StatusSeeOther)
+		fmt.Println(err)
 		return
 	}
-	helpers.SetAlert(w, r, "Kaydınız başarıyla tamamlandı. Lütfen giriş yapın.")
-	http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
-} */
+
+	// Kullanıcıya rolü ata
+	userModel.AddRole(db, &newRole)
+
+	helpers.SetAlert(w, r, "User registered successfully")
+	http.Redirect(w, r, "/admin/register_list", http.StatusSeeOther)
+}
 
 func (userops Userops) Logout(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	helpers.RemoveUser(w, r)

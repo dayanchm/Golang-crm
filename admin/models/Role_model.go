@@ -1,10 +1,25 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Role struct {
 	gorm.Model
-	Name        string `gorm:"unique;not null"`
-	Description string
-	Users       []User `gorm:"many2many:user_roles"`
+	Name string
+}
+
+func (role *Role) Migrate(db *gorm.DB) {
+	db.AutoMigrate(role)
+
+	roles := []Role{
+		{Name: "Admin"},
+		{Name: "Customer"},
+		{Name: "Demo"},
+		{Name: "Client"},
+	}
+
+	for _, r := range roles {
+		db.FirstOrCreate(&r, Role{Name: r.Name})
+	}
 }
