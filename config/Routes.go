@@ -32,5 +32,8 @@ func Routes() *httprouter.Router {
 	r.ServeFiles("/uploads/*filepath", http.Dir("uploads"))
 	r.ServeFiles("/admin/optikuploads/*filepath", http.Dir("optikuploads"))
 
+	// 404 Not Found
+	r.NotFound = http.HandlerFunc(admin.Error{}.NotFound)
+
 	return r
 }

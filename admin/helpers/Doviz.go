@@ -110,5 +110,12 @@ func GetNews() (NewsApiResponse, error) {
 		return NewsApiResponse{}, err
 	}
 
+	var filteredArticles []Article
+	for _, article := range result.Articles {
+		if article.URLToImage != "" {
+			filteredArticles = append(filteredArticles, article)
+		}
+	}
+	result.Articles = filteredArticles
 	return result, nil
 }

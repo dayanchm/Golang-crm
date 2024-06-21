@@ -14,5 +14,5 @@ func main() {
 	admin_models.Optikokuyucu{}.Migrate()
 	admin_models.Dosya{}.Migrate()
 	admin_models.General_Setting{}.Migrate()
-	http.ListenAndServe(":8080", config.Routes())
+	http.ListenAndServe(":8888", config.Routes())
 }

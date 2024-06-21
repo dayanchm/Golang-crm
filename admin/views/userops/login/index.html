@@ -1,53 +1,77 @@
 {{ define "index" }}
 <!DOCTYPE html>
 <html lang="tr">
-  {{ template "head" }}
 
-  <body >
-    <section>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-xl-7"><img class="bg-img-cover bg-center" src="/admin/assets/images/login/2.jpg" alt="looginpage"></div>
-          <div class="col-xl-5 p-0">
-            <div class="login-card">
-              <form class="theme-form login-form"  action="/admin/do_login" method="post">
-                <h4>Login</h4>
-                <h6>Welcome back! Log in to your account.</h6>
-                <div class="form-group">
-                  <label>Email Address</label>
-                  <div class="input-group"><span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
-                    <input class="form-control"  type="text"  id="exampleInputEmail" aria-describedby="emailHelp"   name="username" required="" placeholder="Username">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="viho admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
+  <meta name="keywords"
+    content="admin template, viho admin template, dashboard template, flat admin template, responsive admin template, web app">
+  <meta name="author" content="pixelstrap">
+  <link rel="icon" href="/admin/assets/images/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="/admin/assets/images/favicon.png" type="image/x-icon">
+  <title>Login | </title>
+  <link rel="shortcut icon" type="image/png" href="/admin/assets/images/favicon.png">
+  <link href="/admin/assets/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+  <link href="/admin/assets/vendor/swiper/css/swiper-bundle.min.css" rel="stylesheet">
+  <link href="/admin/assets/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link href="/admin/assets/vendor/datatables/css/buttons.dataTables.min.css" rel="stylesheet">
+  <link href="/admin/assets/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+  <link href="/admin/assets/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+
+<body style="background-image:url('/admin/assets/images/bg.png'); background-position:center;">
+  <div class="authincation fix-wrapper">
+    <div class="container h-100">
+      <div class="row justify-content-center h-100 align-items-center">
+        <div class="col-md-6">
+          <div class="authincation-content">
+            <div class="row no-gutters">
+              <div class="col-xl-12">
+                <div class="auth-form">
+                  <div class="text-center mb-3"><img src="/admin/assets/images/logo/logo-full.png" alt="">
                   </div>
+                  <h4 class="text-center mb-4">Welcome to back</h4>
+                  <form action="/admin/do_login" method="post">
+                    <div class="mb-3">
+                      <label class="mb-1 form-label">Username</label>
+                      <input type="text" class="form-control" name="username" placeholder="username">
+                    </div>
+
+                    <div class="mb-3 position-relative">
+                      <label class="form-label" for="dz-password">Password</label>
+                      <input type="password" id="dz-password" class="form-control" name="password"
+                        placeholder="password">
+                    </div>
+                    <div class="form-row d-flex flex-wrap justify-content-between mb-2">
+                      <div class="form-group mb-sm-4 mb-1">
+                        <div class="form-check custom-checkbox ms-1">
+                          <input type="checkbox" class="form-check-input" id="basic_checkbox_1">
+                          <label class="form-check-label" for="basic_checkbox_1">Remember my preference</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </div>
+                  </form>
                 </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <div class="input-group"><span class="input-group-text"><i class="fa fa-key" aria-hidden="true"></i>
-                  </span>
-                    <input class="form-control" name="password"  id="exampleInputPassword" type="password" name="login[password]" required="" placeholder="*********">
-                    <div class="show-hide"><span class="show">                         </span></div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="checkbox">
-                    <input id="checkbox1" type="checkbox">
-                    <label class="text-muted" for="checkbox1">Remember password</label>
-                  </div><a class="link" href="forget-password">Forgot password?</a>
-                </div>
-                <div class="form-group">
-                  <button class="btn btn-primary btn-block" type="submit">Login</button>
-                </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    {{ template "scripts" }} {{ template "alert" .Alert }}
-  </body>
+
+
+  {{ template "scripts" }} {{ template "alert" .Alert }}
+</body>
+
 </html>
 {{ end }}
-
-
-
-
