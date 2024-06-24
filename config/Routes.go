@@ -2,6 +2,7 @@ package config
 
 import (
 	admin "blog/admin/controllers"
+	"blog/admin/middleware"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -23,7 +24,7 @@ func Routes() *httprouter.Router {
 
 	// Userops
 	r.GET("/admin/login", admin.Userops{}.Index)
-	r.POST("/admin/do_login", admin.Userops{}.Login)
+	r.POST("/admin/do_login", middleware.CSRFMiddleware(admin.Userops{}.Login))
 	r.GET("/admin/logout", admin.Userops{}.Logout)
 
 	// Serve File

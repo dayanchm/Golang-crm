@@ -23,10 +23,14 @@ func (user User) Migrate() {
 	db.AutoMigrate(&user)
 }
 
-func (user *User) AddRole(db *gorm.DB, newRole *Role) {
-	db.Create(newRole)
+func (user *User) AddRole(db *gorm.DB, newRole *Role) error {
+	result := db.Create(newRole)
+	if result.Error != nil {
+		return result.Error
+	}
 	user.RoleID = newRole.ID
 	user.Role = *newRole
+	return db.Save(user).Error
 }
 
 func (user *User) Add(db *gorm.DB, newUser *User) {
@@ -38,15 +42,12 @@ func (user *User) Create(db *gorm.DB) error {
 	return result.Error
 }
 
-func (user User) Get(where ...interface{}) User {
-	db, err := gorm.Open(mysql.Open(Dns), &gorm.Config{})
-	if err != nil {
-		fmt.Println(err)
-		return user
-	}
-	db.Find(&user, where...)
-	return user
+func (user User) Get(db *gorm.DB, where ...interface{}) (User, error) {
+	var foundUser User
+	result := db.Where(where[0], where[1:]...).First(&foundUser)
+	return foundUser, result.Error
 }
+
 
 func (user *User) GetAll(db *gorm.DB, where ...interface{}) []User {
 	var users []User

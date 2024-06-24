@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"net/url"
 
 	"github.com/julienschmidt/httprouter"
 	"gorm.io/driver/mysql"
@@ -15,6 +16,10 @@ import (
 
 type Userops struct{}
 
+func (userops Userops) sanitizeInput(input string) string {
+	return url.QueryEscape(input)
+}
+
 func (userops Userops) Index(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	view, err := template.ParseFiles(helpers.Include("userops/login")...)
 	if err != nil {
@@ -22,24 +27,68 @@ func (userops Userops) Index(w http.ResponseWriter, r *http.Request, params http
 		return
 	}
 	data := make(map[string]interface{})
-	data["Alert"] = helpers.GetAlert(w, r)
+	alert := helpers.GetAlert(w, r)
+	data["is_alert"] = alert["is_alert"]
+	data["message"] = alert["message"]
+	csrfToken, err := helpers.SetCSRFToken(w, r)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	data["CSRFToken"] = csrfToken
 	view.ExecuteTemplate(w, "index", data)
 }
-
 func (userops Userops) Login(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	username := r.FormValue("username")
-	password := fmt.Sprintf("%x", sha256.Sum256([]byte(r.FormValue("password"))))
-	user := models.User{}.Get("username = ? AND password = ?", username, password)
-	if user.Username == username && user.Password == password {
-		helpers.SetUser(w, r, username, password)
+	allowed, remainingTime := helpers.CheckLoginAttempts(r)
+	if !allowed {
+		helpers.SetAlert(w, r, fmt.Sprintf("Too many login attempts. Please try again after %v.", remainingTime))
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return
+	}
+
+	username := userops.sanitizeInput(r.FormValue("username"))
+	password := userops.sanitizeInput(r.FormValue("password"))
+
+	if username == "" || password == "" {
+		helpers.SetAlert(w, r, "Username and Password cannot be empty")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return
+	}
+
+	hashedPassword := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
+
+	db, err := gorm.Open(mysql.Open(models.Dns), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+		helpers.SetAlert(w, r, "Database connection error")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return
+	}
+
+	user, err := models.User{}.Get(db, "username = ? AND password = ?", username, hashedPassword)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			helpers.SetAlert(w, r, "Wrong Username and Password")
+		} else {
+			helpers.SetAlert(w, r, "User not found")
+		}
+		helpers.RecordLoginAttempt(r, false)
+		fmt.Println(err)
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return
+	}
+
+	if user.Username == username && user.Password == hashedPassword {
+		helpers.SetUser(w, r, username, hashedPassword)
+		helpers.RecordLoginAttempt(r, true)
 		helpers.SetAlert(w, r, "Welcome")
 		http.Redirect(w, r, "/admin", http.StatusSeeOther)
 	} else {
+		helpers.RecordLoginAttempt(r, false)
 		helpers.SetAlert(w, r, "Wrong Username and Password")
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 	}
 }
-
 func (userops Userops) Register(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	if !helpers.CheckUser(w, r) {
 		return
@@ -50,11 +99,16 @@ func (userops Userops) Register(w http.ResponseWriter, r *http.Request, params h
 		return
 	}
 	data := make(map[string]interface{})
-	data["User"] = models.User{}.Get()
+	db, err := gorm.Open(mysql.Open(models.Dns), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	user, err := models.User{}.Get(db)
+	data["User"] = user
 	data["Alert"] = helpers.GetAlert(w, r)
 	view.ExecuteTemplate(w, "index", data)
 }
-
 func (userops Userops) RegisterList(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	if !helpers.CheckUser(w, r) {
 		return
@@ -65,11 +119,16 @@ func (userops Userops) RegisterList(w http.ResponseWriter, r *http.Request, para
 		return
 	}
 	data := make(map[string]interface{})
-	data["User"] = models.User{}.Get()
+	db, err := gorm.Open(mysql.Open(models.Dns), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	user, err := models.User{}.Get(db)
+	data["User"] = user
 	data["Alert"] = helpers.GetAlert(w, r)
 	view.ExecuteTemplate(w, "index", data)
 }
-
 func (userops Userops) RegisterAdd(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	if !helpers.CheckUser(w, r) {
 		return
@@ -109,12 +168,14 @@ func (userops Userops) RegisterAdd(w http.ResponseWriter, r *http.Request, param
 	}
 
 	// Kullanıcıya rolü ata
-	userModel.AddRole(db, &newRole)
+	if err := userModel.AddRole(db, &newRole); err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	helpers.SetAlert(w, r, "User registered successfully")
 	http.Redirect(w, r, "/admin/register_list", http.StatusSeeOther)
 }
-
 func (userops Userops) Logout(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	helpers.RemoveUser(w, r)
 	helpers.SetAlert(w, r, "Good bye, see you soon")

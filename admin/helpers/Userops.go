@@ -3,6 +3,8 @@ package helpers
 import (
 	"blog/admin/models"
 	"net/http"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 func SetUser(w http.ResponseWriter, r *http.Request, username string, password string) error {
@@ -10,7 +12,6 @@ func SetUser(w http.ResponseWriter, r *http.Request, username string, password s
 	if err != nil {
 		return err
 	}
-
 	session.Values["username"] = username
 	session.Values["password"] = password
 
@@ -26,12 +27,25 @@ func CheckUser(w http.ResponseWriter, r *http.Request) bool {
 	username := session.Values["username"]
 	password := session.Values["password"]
 
-	user := models.User{}.Get("username = ? AND password = ?", username, password)
+	db, err := gorm.Open(mysql.Open(models.Dns), &gorm.Config{})
+	if err != nil {
+		SetAlert(w, r, "Database connection error")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return false
+	}
+
+	user, err := models.User{}.Get(db, "username = ? AND password = ?", username, password)
+	if err != nil {
+		SetAlert(w, r, "Please Login")
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return false
+	}
 
 	if user.Username == username && user.Password == password {
 		return true
 	}
-	SetAlert(w, r, "Lütfen Giriş Yapın")
+
+	SetAlert(w, r, "Please Login")
 	http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 	return false
 }
@@ -45,5 +59,4 @@ func RemoveUser(w http.ResponseWriter, r *http.Request) error {
 	session.Options.MaxAge = -1
 
 	return session.Save(r, w)
-
 }
