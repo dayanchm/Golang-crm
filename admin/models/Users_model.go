@@ -48,7 +48,6 @@ func (user User) Get(db *gorm.DB, where ...interface{}) (User, error) {
 	return foundUser, result.Error
 }
 
-
 func (user *User) GetAll(db *gorm.DB, where ...interface{}) []User {
 	var users []User
 	db.Find(&users, where...)

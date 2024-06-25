@@ -41,7 +41,10 @@ func (userops Userops) Index(w http.ResponseWriter, r *http.Request, params http
 func (userops Userops) Login(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	allowed, remainingTime := helpers.CheckLoginAttempts(r)
 	if !allowed {
-		helpers.SetAlert(w, r, fmt.Sprintf("Too many login attempts. Please try again after %v.", remainingTime))
+		// Dakika ve saniye cinsinden kalan süreyi hesaplayın
+		minutes := int(remainingTime.Minutes())
+		seconds := int(remainingTime.Seconds()) % 60
+		helpers.SetAlert(w, r, fmt.Sprintf("Too many login attempts. Please try again after %d minutes and %d seconds.", minutes, seconds))
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 		return
 	}
@@ -89,6 +92,7 @@ func (userops Userops) Login(w http.ResponseWriter, r *http.Request, params http
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 	}
 }
+
 func (userops Userops) Register(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	if !helpers.CheckUser(w, r) {
 		return
