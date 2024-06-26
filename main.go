@@ -14,5 +14,6 @@ func main() {
 	admin_models.Optikokuyucu{}.Migrate()
 	admin_models.Dosya{}.Migrate()
 	admin_models.General_Setting{}.Migrate()
+	(&admin_models.Log{}).Migrate() // Pointer ile çağırıyoruz
 	http.ListenAndServe(":8888", config.Routes())
 }

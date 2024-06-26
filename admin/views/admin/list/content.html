@@ -70,25 +70,61 @@
                         <div class="card-header pb-0">
                             <h5>Daily News</h5>
                         </div>
-                        <div class="my-gallery card-body row gallery-with-description">
+                        <div class="card-body py-3">
                             {{range .Newss}}
-                            <figure class="col-xl-3 col-sm-12" itemprop="associatedMedia">
-                                <a href="{{.URL}}" itemprop="contentUrl" target="_blank">
-                                    <img src={{.URLToImage}} itemprop="thumbnail" class="w-100" alt={{.Title}}>
-                                    <div class="caption">
+                            <a href="{{.URL}}" class="third-post">
+                                <img src="{{.URLToImage}}" alt="">
+                                <div class="post-1">
+                                    <div class="post-data">
                                         <h4>{{.Title}}</h4>
-                                        <p>{{.Description}}</p>
+                                        <span>
+                                            {{.Description}}
+                                        </span>
                                     </div>
-                                </a>
-                            </figure>
+                                </div>
+                            </a>
                             {{end}}
+            
                         </div>
                     </div>
                 </div>
             </div>
+
+        
         </div>
     </div>
 </div>
+
+<div class="container">
+    <h1>User Logs</h1>
+    {{ if .Logs }}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .Logs }}
+                    <tr>
+                        <td>{{ .ID }}</td>
+                        <td>{{ .User.Username }}</td>
+                        <td>{{ .Action }}</td>
+                        <td>{{ .Details }}</td>
+                        <td>{{ .Timestamp }}</td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    {{ else }}
+        <p>No logs available.</p>
+    {{ end }}
+</div>
+
 
 
 {{end}}

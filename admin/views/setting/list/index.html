@@ -5,22 +5,24 @@
 {{ template "head" }}
 
 <body>
-    <div class="page-wrapper compact-wrapper" id="pageWrapper">
-      <div class="page-body-wrapper sidebar-icon">
-        
-    {{ template "sidebar"}}
+  {{ template "preloader" }}
+  <div id="main-wrapper">
+
     {{ template "navbar" }}
+    {{ template "header"}}
+
+    {{ template "sidebar"}}
 
     {{template "content" . }}
 
+
     {{template "footer"}}
 
-</div>
-</div>
-    {{template "scripts" }}
+  </div>
 
 
 </body>
+{{template "scripts" }}
 
 </html>
 {{end}}

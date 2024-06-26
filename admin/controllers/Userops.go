@@ -82,6 +82,7 @@ func (userops Userops) Login(w http.ResponseWriter, r *http.Request, params http
 	}
 
 	if user.Username == username && user.Password == hashedPassword {
+		helpers.LogAction(user.ID, "login", "User logged in successfully")
 		helpers.SetUser(w, r, username, hashedPassword)
 		helpers.RecordLoginAttempt(r, true)
 		helpers.SetAlert(w, r, "Welcome")
@@ -184,4 +185,25 @@ func (userops Userops) Logout(w http.ResponseWriter, r *http.Request, params htt
 	helpers.RemoveUser(w, r)
 	helpers.SetAlert(w, r, "Good bye, see you soon")
 	http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+}
+
+func (userops Userops) ShowLogs(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	if !helpers.CheckUser(w, r) {
+		return
+	}
+	view, err := template.New("index").Funcs(template.FuncMap{}).ParseFiles(helpers.Include("admin/list")...)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	data := make(map[string]interface{})
+	db, err := gorm.Open(mysql.Open(models.Dns), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	var logs []models.Log
+	db.Preload("User").Find(&logs)
+	data["Logs"] = logs
+	view.ExecuteTemplate(w, "index", data)
 }
